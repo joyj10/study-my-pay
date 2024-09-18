@@ -1,0 +1,3 @@
+rootProject.name = 'mypay'
+include 'membership-service'
+

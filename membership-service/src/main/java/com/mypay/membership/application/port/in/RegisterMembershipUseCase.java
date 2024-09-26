@@ -1,10 +1,9 @@
 package com.mypay.membership.application.port.in;
 
-import com.mypay.membership.adapter.out.persistence.MembershipJpaEntity;
+import com.mypay.membership.domain.Membership;
 import common.UseCase;
 
 @UseCase
 public interface RegisterMembershipUseCase {
-
-    MembershipJpaEntity registerMembership(RegisterMembershipCommand command);
+    Membership registerMembership(RegisterMembershipCommand command);
 }

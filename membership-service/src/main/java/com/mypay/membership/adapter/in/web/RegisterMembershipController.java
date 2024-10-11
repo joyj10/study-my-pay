@@ -24,8 +24,8 @@ public class RegisterMembershipController {
 
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
                 .name(request.getName())
-                .address(request.getAddress())
                 .email(request.getEmail())
+                .address(request.getAddress())
                 .isValid(true)
                 .isCorp(request.isCorp())
                 .build();

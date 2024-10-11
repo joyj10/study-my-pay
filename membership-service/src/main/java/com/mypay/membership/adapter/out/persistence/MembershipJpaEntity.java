@@ -31,10 +31,10 @@ public class MembershipJpaEntity {
 
     private boolean isCorp;
 
-    public MembershipJpaEntity(String name, String address, String email, boolean isValid, boolean isCorp) {
+    public MembershipJpaEntity(String name, String email, String address, boolean isValid, boolean isCorp) {
         this.name = name;
-        this.address = address;
         this.email = email;
+        this.address = address;
         this.isValid = isValid;
         this.isCorp = isCorp;
     }
@@ -44,8 +44,8 @@ public class MembershipJpaEntity {
         return "MembershipEntity{" +
                 "membershipId=" + membershipId +
                 ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
                 ", isValid=" + isValid +
                 ", isCorp=" + isCorp +
                 '}';

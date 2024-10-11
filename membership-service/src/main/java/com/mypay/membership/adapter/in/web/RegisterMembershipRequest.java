@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterMembershipRequest {
     private String name;
-    private String address;
     private String email;
+    private String address;
     private boolean isCorp;
 }

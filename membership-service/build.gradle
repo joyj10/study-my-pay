@@ -7,7 +7,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -41,6 +41,8 @@ dependencies {
 
     // h2 DB
     runtimeOnly 'com.h2database:h2'
+
+    implementation project(path: ':common')
 }
 
 test {

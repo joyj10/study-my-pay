@@ -1,6 +1,6 @@
 package com.mypay.membership.application.port.in;
 
-import common.SelfValidating;
+import com.mypay.common.SelfValidating;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

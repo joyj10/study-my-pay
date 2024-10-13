@@ -1,0 +1,9 @@
+group = 'com.mypay'
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

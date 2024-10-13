@@ -1,13 +1,11 @@
 package com.mypay.membership.adapter.out.persistence;
 
+import com.mypay.common.PersistenceAdapter;
 import com.mypay.membership.application.port.out.FindMembershipPort;
 import com.mypay.membership.application.port.out.ModifyMembershipPort;
 import com.mypay.membership.application.port.out.RegisterMembershipPort;
 import com.mypay.membership.domain.Membership;
-import common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Optional;
 

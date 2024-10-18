@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.mypay.membership'
-version = '1.0-SNAPSHOT'
+version = '1.0.1'
 
 dependencies {
     implementation project(path: ':common')
@@ -23,7 +23,7 @@ docker {
     // 이미지 이름
     name rootProject.name + '-' + project.name + ":" + version
     // 어떤 Dockerfile 사용하는지 지정
-    dockerfile file('./Dockerfile')
+    dockerfile file('../Dockerfile')
     // 어떤 파일들을 Dockerfile 을 통해 Docker 이미지 안에 복사할 것인지
     files tasks.bootJar.outputs.files
     // Dockerfile 에 전달할 인자(ARG)

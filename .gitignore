@@ -43,3 +43,6 @@ bin/
 
 # SonarLint plugin
 .idea/sonarlint/
+
+# db local data
+/db/data/

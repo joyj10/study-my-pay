@@ -26,7 +26,7 @@ class RegisterBankAccountControllerTest {
         RegisterBankAccountRequest request = new RegisterBankAccountRequest("1", "카카오뱅크", "1234567890", true);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/banking/account/register")
+                MockMvcRequestBuilders.post("/banking/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request))
         )

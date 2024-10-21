@@ -16,7 +16,7 @@ public class RegisterMembershipController {
 
     private final RegisterMembershipUseCase registerMembershipUseCase;
 
-    @PostMapping("/membership/register")
+    @PostMapping("/membership")
     public Membership registerMembership(@RequestBody RegisterMembershipRequest request) {
         // request
         // request -> Command (추상화 계층)

@@ -1,7 +1,8 @@
 package com.mypay.banking.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mypay.banking.domain.Membership;
+import com.mypay.membership.adapter.in.web.RegisterMembershipRequest;
+import com.mypay.membership.domain.Membership;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

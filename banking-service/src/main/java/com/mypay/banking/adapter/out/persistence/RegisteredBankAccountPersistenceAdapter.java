@@ -1,13 +1,16 @@
 package com.mypay.banking.adapter.out.persistence;
 
+import com.mypay.banking.application.port.out.FindRegisteredBankAccountPort;
 import com.mypay.common.PersistenceAdapter;
 import com.mypay.banking.application.port.out.RegisterBankAccountPort;
 import com.mypay.banking.domain.RegisteredBankAccount;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAccountPort {
+public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAccountPort, FindRegisteredBankAccountPort {
 
     private final SpringDataRegisteredBankAccountRepository bankAccountRepository;
 
@@ -24,5 +27,10 @@ public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAcco
                         linkedStatusIsValid.isLinkedStatusIsValid()
                 )
         );
+    }
+
+    @Override
+    public Optional<RegisteredBankAccountJpaEntity> findRegisteredBankAccount(RegisteredBankAccount.RegisteredBankAccountId registeredBankAccountId) {
+        return bankAccountRepository.findById(Long.parseLong(registeredBankAccountId.getRegisteredBankAccountId()));
     }
 }

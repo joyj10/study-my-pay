@@ -1,0 +1,34 @@
+plugins {
+    id 'com.palantir.docker' version '0.35.0'
+}
+
+group = 'com.mypay.money'
+version = '1.0.0'
+
+dependencies {
+    implementation project(path: ':common')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0' // Swagger UI를 포함한 Springdoc OpenAPI
+
+    // h2 DB
+    runtimeOnly 'com.h2database:h2'
+
+    //mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
+
+docker {
+    println(tasks.bootJar.outputs.files)
+    // 이미지 이름
+    name rootProject.name + '-' + project.name + ":" + version
+    // 어떤 Dockerfile 사용하는지 지정
+    dockerfile file('../Dockerfile')
+    // 어떤 파일들을 Dockerfile 을 통해 Docker 이미지 안에 복사할 것인지
+    files tasks.bootJar.outputs.files
+    // Dockerfile 에 전달할 인자(ARG)
+    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
+}

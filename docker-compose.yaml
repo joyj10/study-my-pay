@@ -33,11 +33,26 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update  # JPA의 DDL 설정으로 테이블 자동 업데이트
 
   banking-service:
-    image: mypay-banking-service:1.0.0      # mypay-banking-service:1.0.1 이미지를 사용하여 컨테이너 생성
+    image: mypay-banking-service:1.0.0      # mypay-banking-service:1.0.0 이미지를 사용하여 컨테이너 생성
     networks:
       - mypay_network                       # 'mypay_network'라는 네트워크에 연결
     ports: # 컨테이너 내부 포트를 호스트 외부 포트에 매핑
       - "8082:8080"                         # 호스트의 8082 포트를 컨테이너 내부의 8080 포트와 매핑 (호스트의 8081로 요청이 들어오면 컨테이너의 8080으로 전달)
+    depends_on:
+      - mysql                               # mysql 서비스가 먼저 실행된 후 membership-service가 실행됨
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
+      SPRING_DATASOURCE_USERNAME: mysqluser  # 데이터베이스 사용자 이름
+      SPRING_DATASOURCE_PASSWORD: mysqlpw  # 데이터베이스 사용자 비밀번호
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+
+  money-service:
+    image: mypay-money-service:1.0.0        # mypay-money-service:1.0.0 이미지를 사용하여 컨테이너 생성
+    networks:
+      - mypay_network                       # 'mypay_network'라는 네트워크에 연결
+    ports: # 컨테이너 내부 포트를 호스트 외부 포트에 매핑
+      - "8083:8080"                         # 호스트의 8083 포트를 컨테이너 내부의 8080 포트와 매핑 (호스트의 8081로 요청이 들어오면 컨테이너의 8080으로 전달)
     depends_on:
       - mysql                               # mysql 서비스가 먼저 실행된 후 membership-service가 실행됨
     environment:

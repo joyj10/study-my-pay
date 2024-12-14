@@ -50,6 +50,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # JPA의 DDL 설정으로 테이블 자동 업데이트
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=mypay.logging.out.stdout
+      - SERVICE_MEMBERSHIP_URL=http://membership-service:8080 # 내부적으로 membership 8080 사용중
 
   money-service:
     image: mypay-money-service:1.0.0        # mypay-money-service:1.0.0 이미지를 사용하여 컨테이너 생성

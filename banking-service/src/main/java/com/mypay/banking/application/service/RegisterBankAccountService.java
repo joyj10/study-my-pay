@@ -6,6 +6,8 @@ import com.mypay.banking.adapter.out.persistence.RegisteredBankAccountJpaEntity;
 import com.mypay.banking.adapter.out.persistence.RegisteredBankAccountMapper;
 import com.mypay.banking.application.port.in.RegisterBankAccountCommand;
 import com.mypay.banking.application.port.in.RegisterBankAccountUseCase;
+import com.mypay.banking.application.port.out.GetMembershipPort;
+import com.mypay.banking.application.port.out.MembershipStatus;
 import com.mypay.banking.application.port.out.RegisterBankAccountPort;
 import com.mypay.banking.application.port.out.RequestBankAccountInfoPort;
 import com.mypay.banking.domain.RegisteredBankAccount;
@@ -21,10 +23,18 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
     private final RegisterBankAccountPort registerBankAccountPort;
     private final RegisteredBankAccountMapper registeredBankAccountMapper;
     private final RequestBankAccountInfoPort requestBankAccountInfoPort;
+    private final GetMembershipPort getMembershipPort;
 
     @Override
     public RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command) {
         // 은행 계좌를 등록해야 하는 서비스 (비즈니스 로직)
+
+        // call membership svc, 정산인지 확인
+        MembershipStatus membershipStatus = getMembershipPort.getMembership(command.getMembershipId());
+        if (!membershipStatus.isValid()) {
+            return null;
+        }
+        // call external bank svc, 정상인지 확인
 
         // 1. 외부 실제 은행에 등록 가능한 계좌 인지(정상 여부) 확인: 외부 은행에 정상 계좌 인지 확인
         // Biz Logic -> External System

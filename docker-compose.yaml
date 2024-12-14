@@ -144,6 +144,32 @@ services:
       - TASK_TOPIC=mypay.task.topic
       - TASK_RESULT_TOPIC=mypay.task.result.topic
 
+  송-service:
+    image: mypay-remittance-service:1.0.0
+    networks:
+      - mypay_network
+    ports:
+      - "8084:8080"
+    restart: always
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      - AXON_AXONSERVER_SERVERS=axon-server:8124
+      - AXON_SERIALIZER_EVENTS=jackson
+      - AXON_SERIALIZER_MESSAGES=jackson
+      - AXON_SERIALIZER_GENERAL=xstream
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
+      - SPRING_DATASOURCE_USERNAME=mysqluser  # 데이터베이스 사용자 이름
+      - SPRING_DATASOURCE_PASSWORD=mysqlpw    # 데이터베이스 사용자 비밀번호
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=mypay.logging.out.stdout
+      - SERVICE_MEMBERSHIP_URL=http://membership-service:8080 # 내부적으로 membership 8080 사용중
+      - SERVICE_BANKING_URL=http://banking-service:8080
+      - SERVICE_MONEY_URL=http://money-service:8080
+
 networks:
   mypay_network:
     driver: bridge                           # 네트워크 드라이버를 bridge로 설정

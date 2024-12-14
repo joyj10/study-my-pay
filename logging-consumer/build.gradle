@@ -1,0 +1,29 @@
+plugins {
+    id 'com.palantir.docker' version '0.35.0'
+}
+
+group = 'com.mypay.logging-consumer'
+version = '1.0.0'
+
+dependencies {
+    implementation project(path: ':common')
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+    implementation 'org.jetbrains:annotations:23.0.0'
+
+    testImplementation 'junit:junit:4.13.1'
+}
+
+docker {
+    println(tasks.bootJar.outputs.files)
+    // 이미지 이름
+    name rootProject.name + '-' + project.name + ":" + version
+    // 어떤 Dockerfile 사용하는지 지정
+    dockerfile file('../Dockerfile')
+    // 어떤 파일들을 Dockerfile 을 통해 Docker 이미지 안에 복사할 것인지
+    files tasks.bootJar.outputs.files
+    // Dockerfile 에 전달할 인자(ARG)
+    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
+}

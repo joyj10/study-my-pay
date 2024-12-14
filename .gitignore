@@ -46,3 +46,7 @@ bin/
 
 # db local data
 /db/data/
+/.idea/.name
+/.idea/misc.xml
+/.idea/vcs.xml
+/.idea/workspace.xml

@@ -26,11 +26,13 @@ services:
     depends_on:
       - mysql                               # mysql 서비스가 먼저 실행된 후 membership-service가 실행됨
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
-      SPRING_DATASOURCE_USERNAME: mysqluser  # 데이터베이스 사용자 이름
-      SPRING_DATASOURCE_PASSWORD: mysqlpw  # 데이터베이스 사용자 비밀번호
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
+      - SPRING_DATASOURCE_USERNAME=mysqluser  # 데이터베이스 사용자 이름
+      - SPRING_DATASOURCE_PASSWORD=mysqlpw    # 데이터베이스 사용자 비밀번호
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=mypay.logging.out.stdout
 
   banking-service:
     image: mypay-banking-service:1.0.0      # mypay-banking-service:1.0.0 이미지를 사용하여 컨테이너 생성
@@ -41,11 +43,13 @@ services:
     depends_on:
       - mysql                               # mysql 서비스가 먼저 실행된 후 membership-service가 실행됨
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
-      SPRING_DATASOURCE_USERNAME: mysqluser  # 데이터베이스 사용자 이름
-      SPRING_DATASOURCE_PASSWORD: mysqlpw  # 데이터베이스 사용자 비밀번호
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
+      - SPRING_DATASOURCE_USERNAME=mysqluser  # 데이터베이스 사용자 이름
+      - SPRING_DATASOURCE_PASSWORD=mysqlpw    # 데이터베이스 사용자 비밀번호
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=mypay.logging.out.stdout
 
   money-service:
     image: mypay-money-service:1.0.0        # mypay-money-service:1.0.0 이미지를 사용하여 컨테이너 생성
@@ -56,11 +60,71 @@ services:
     depends_on:
       - mysql                               # mysql 서비스가 먼저 실행된 후 membership-service가 실행됨
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
-      SPRING_DATASOURCE_USERNAME: mysqluser  # 데이터베이스 사용자 이름
-      SPRING_DATASOURCE_PASSWORD: mysqlpw  # 데이터베이스 사용자 비밀번호
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/my_pay?useSSL=false&allowPublicKeyRetrieval=true  # MySQL 데이터베이스 URL 설정
+      - SPRING_DATASOURCE_USERNAME=mysqluser  # 데이터베이스 사용자 이름
+      - SPRING_DATASOURCE_PASSWORD=mysqlpw    # 데이터베이스 사용자 비밀번호
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect  # Hibernate 사용을 위한 MySQL Dialect 설정
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # JPA의 DDL 설정으로 테이블 자동 업데이트
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=mypay.logging.out.stdout
+
+  zookeeper:
+    image: 'zookeeper:3.8'                  # 주키퍼 3.8 이미지를 사용하여 컨테이너 생성
+    networks:
+      - mypay_network                       # mypay_network라는 사용자 정의 네트워크에 연결
+    ports:
+      - '2181:2181'                         # 호스트의 2181 포트를 컨테이너의 2181 포트로 매핑
+    environment: # 환경 변수 설정
+      - ALLOW_ANONYMOUS_LOGIN=yes           # 익명 로그인을 허용
+      - ZOO_TLS_CLIENT_AUTH=none            # TLS 클라이언트 인증 비활성화
+      - ZOO_TLS_QUORUM_CLIENT_AUTH=none     # 클라이언트 인증이 필요 없는 상태로 설정
+
+  kafka:
+    image: 'bitnami/kafka:3.4.0'            # Bitnami의 Kafka 3.4.0 이미지를 사용하여 컨테이너 생성
+    platform: linux/amd64
+    networks:
+      - mypay_network                       # mypay_network 사용자 정의 네트워크에 연결
+    ports:
+      - '9092:9092'                         # 호스트의 9092 포트를 컨테이너의 9092 포트로 매핑
+    environment: # 환경 변수 설정
+      - KAFKA_ENABLE_KRAFT=no               # KRaft 모드 비활성화 (주키퍼 사용)
+      - KAFKA_BROKER_ID=1                   # Kafka 브로커의 고유 ID를 1로 설정
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181  # Kafka가 사용할 주키퍼의 주소와 포트(카프카 주피터 필수)
+      - ALLOW_PLAINTEXT_LISTENER=yes        # 보안 연결 없이 평문으로 리스너 허용
+      - KAFKA_CFG_LISTENERS=LC://kafka:29092,LX://kafka:9092  # Kafka 컨테이너에서 사용할 리스너 프로토콜과 포트 설정
+      - KAFKA_CFG_ADVERTISED_LISTENERS=LC://kafka:29092,LX://${DOCKER_HOST_IP:-localhost}:9092  # 외부에서 접근 가능한 리스너의 주소와 포트 설정
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LC:PLAINTEXT,LX:PLAINTEXT  # 리스너에 대한 보안 프로토콜 매핑 설정
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LC  # 브로커 간 통신에 사용할 리스너 이름 지정
+    depends_on:
+      - zookeeper                           # zookeeper 컨테이너가 준비된 후에 실행되도록 설정
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui           # Kafka UI를 제공하는 Provectus Labs의 이미지 사용
+    container_name: kafka-ui                # 컨테이너 이름을 kafka-ui로 설정
+    networks:
+      - mypay_network                       # mypay_network 사용자 정의 네트워크에 연결
+    ports:
+      - "8989:8080"                         # 호스트의 8989 포트를 컨테이너의 8080 포트로 매핑
+    restart: always                         # 컨테이너가 실패하면 자동으로 재시작
+    depends_on:
+      - kafka                               # Kafka 컨테이너가 준비된 후 실행되도록 설정
+      - zookeeper                           # Zookeeper 컨테이너가 준비된 후 실행되도록 설정
+    environment: # 환경 변수 설정
+      - KAFKA_CLUSTERS_0_NAME=local         # Kafka 클러스터 이름을 local로 설정
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092  # Kafka 클러스터에 연결할 부트스트랩 서버 주소
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181  # Kafka 클러스터에 연결할 Zookeeper 주소
+
+  logging-consumer:
+    image: mypay-logging-consumer:1.0.0
+    networks:
+      - mypay_network
+    restart: always
+    depends_on:
+      - kafka
+      - zookeeper
+    environment:
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=mypay.logging.out.stdout
 
 networks:
   mypay_network:

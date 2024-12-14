@@ -1,9 +1,9 @@
-package com.mypay.banking.adapter.out.service;
+package com.mypay.money.adapter.out.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mypay.banking.application.port.out.GetMembershipPort;
-import com.mypay.banking.application.port.out.MembershipStatus;
 import com.mypay.common.CommonHttpClient;
+import com.mypay.money.application.port.out.GetMembershipPort;
+import com.mypay.money.application.port.out.MembershipStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,6 @@ public class MembershipServiceAdapter implements GetMembershipPort {
         this.commonHttpClient = commonHttpClient;
         this.membershipServiceUrl = membershipServiceUrl;
     }
-
     @Override
     public MembershipStatus getMembership(String membershipId) {
         String url = String.join("/", membershipServiceUrl, "membership", membershipId);

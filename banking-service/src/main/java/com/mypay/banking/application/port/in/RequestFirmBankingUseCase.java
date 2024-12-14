@@ -1,7 +1,7 @@
 package com.mypay.banking.application.port.in;
 
 import com.mypay.banking.domain.FirmBankingRequest;
-import com.mypay.common.UseCase;
+import com.mypay.common.annotation.UseCase;
 
 @UseCase
 public interface RequestFirmBankingUseCase {

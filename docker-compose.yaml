@@ -68,6 +68,9 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update  # JPA의 DDL 설정으로 테이블 자동 업데이트
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=mypay.logging.out.stdout
+      - TASK_TOPIC=mypay.task.topic
+      - TASK_RESULT_TOPIC=mypay.task.result.topic
+      - SERVICE_MEMBERSHIP_URL=http://membership-service:8080 # 내부적으로 membership 8080 사용중
 
   zookeeper:
     image: 'zookeeper:3.8'                  # 주키퍼 3.8 이미지를 사용하여 컨테이너 생성
@@ -126,6 +129,20 @@ services:
     environment:
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=mypay.logging.out.stdout
+
+  task-consumer:
+    image: mypay-task-consumer:1.0.0
+    networks:
+      - mypay_network
+    restart: always
+    depends_on:
+      - kafka
+      - zookeeper
+    environment:
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=mypay.logging.out.stdout
+      - TASK_TOPIC=mypay.task.topic
+      - TASK_RESULT_TOPIC=mypay.task.result.topic
 
 networks:
   mypay_network:

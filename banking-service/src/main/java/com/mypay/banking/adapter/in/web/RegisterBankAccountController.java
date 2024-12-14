@@ -1,6 +1,6 @@
 package com.mypay.banking.adapter.in.web;
 
-import com.mypay.common.WebAdapter;
+import com.mypay.common.annotation.WebAdapter;
 import com.mypay.banking.application.port.in.RegisterBankAccountCommand;
 import com.mypay.banking.application.port.in.RegisterBankAccountUseCase;
 import com.mypay.banking.domain.RegisteredBankAccount;

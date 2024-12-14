@@ -1,7 +1,7 @@
 package com.mypay.banking.adapter.out.persistence;
 
 import com.mypay.banking.application.port.out.FindRegisteredBankAccountPort;
-import com.mypay.common.PersistenceAdapter;
+import com.mypay.common.annotation.PersistenceAdapter;
 import com.mypay.banking.application.port.out.RegisterBankAccountPort;
 import com.mypay.banking.domain.RegisteredBankAccount;
 import lombok.RequiredArgsConstructor;

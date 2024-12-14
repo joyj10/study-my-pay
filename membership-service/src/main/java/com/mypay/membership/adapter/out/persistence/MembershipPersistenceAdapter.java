@@ -1,6 +1,6 @@
 package com.mypay.membership.adapter.out.persistence;
 
-import com.mypay.common.PersistenceAdapter;
+import com.mypay.common.annotation.PersistenceAdapter;
 import com.mypay.membership.application.port.out.FindMembershipPort;
 import com.mypay.membership.application.port.out.ModifyMembershipPort;
 import com.mypay.membership.application.port.out.RegisterMembershipPort;

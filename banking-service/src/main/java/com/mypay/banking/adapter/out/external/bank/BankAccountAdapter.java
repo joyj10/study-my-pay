@@ -2,7 +2,7 @@ package com.mypay.banking.adapter.out.external.bank;
 
 import com.mypay.banking.application.port.out.RequestBankAccountInfoPort;
 import com.mypay.banking.application.port.out.RequestExternalFirmBakingPort;
-import com.mypay.common.ExternalSystemAdapter;
+import com.mypay.common.annotation.ExternalSystemAdapter;
 import lombok.RequiredArgsConstructor;
 
 @ExternalSystemAdapter

@@ -1,4 +1,4 @@
-package com.mypay.common;
+package com.mypay.common.logging;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;

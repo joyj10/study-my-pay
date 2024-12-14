@@ -1,6 +1,6 @@
 package com.mypay.money.adapter.out.persistence;
 
-import com.mypay.common.PersistenceAdapter;
+import com.mypay.common.annotation.PersistenceAdapter;
 import com.mypay.money.application.port.out.IncreaseMoneyPort;
 import com.mypay.money.domain.MemberMoney;
 import com.mypay.money.domain.MoneyChangingRequest;

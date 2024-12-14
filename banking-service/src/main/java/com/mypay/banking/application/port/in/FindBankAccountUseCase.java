@@ -1,7 +1,7 @@
 package com.mypay.banking.application.port.in;
 
 import com.mypay.banking.domain.RegisteredBankAccount;
-import com.mypay.common.UseCase;
+import com.mypay.common.annotation.UseCase;
 import org.apache.coyote.BadRequestException;
 
 @UseCase

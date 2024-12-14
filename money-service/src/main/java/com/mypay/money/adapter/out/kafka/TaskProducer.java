@@ -1,6 +1,9 @@
-package com.mypay.common;
+package com.mypay.money.adapter.out.kafka;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mypay.common.kafkatask.RechargingMoneyTask;
+import com.mypay.money.application.port.out.SendRechargingMoneyTaskPort;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -11,20 +14,15 @@ import java.util.Properties;
 
 @Slf4j
 @Component
-public class LoggingProducer {
+public class TaskProducer implements SendRechargingMoneyTaskPort {
     private final KafkaProducer<String, String> producer;
     private final String topic;
 
-    public LoggingProducer(@Value("${kafka.clusters.bootstrapservers}") String bootstrapServers,
-                           @Value("${logging.topic}")String topic) {
+    public TaskProducer(@Value("${kafka.clusters.bootstrapservers}") String bootstrapServers,
+                        @Value("${task.topic}")String topic) {
 
-        // Producer Initialization ';'(브로커 여러개인 경우)
         Properties props = new Properties();
-
-        // kafka:29092
         props.put("bootstrap.servers", bootstrapServers);
-
-        // "key:value"
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
@@ -32,9 +30,15 @@ public class LoggingProducer {
         this.topic = topic;
     }
 
-    // Kafka Cluster [key, value] Produce
-    public void sendMessage(String key, String value) {
-        ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
+    public void sendTask (String key, RechargingMoneyTask task) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonStringToProduce;
+        try {
+            jsonStringToProduce = objectMapper.writeValueAsString(task);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, jsonStringToProduce);
         producer.send(record, (metadata, exception) -> {
             if (exception == null) {
                 log.info("Message sent successfully. Offset: " + metadata.offset());
@@ -43,5 +47,10 @@ public class LoggingProducer {
                 log.error("Failed to send message: " + exception.getMessage());
             }
         });
+    }
+
+    @Override
+    public void sendRechargingMoneyTaskPort(RechargingMoneyTask task) {
+        this.sendTask(task.getTaskId(), task);
     }
 }

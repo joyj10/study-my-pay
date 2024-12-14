@@ -1,6 +1,6 @@
 package com.mypay.membership.adapter.in.web;
 
-import com.mypay.common.WebAdapter;
+import com.mypay.common.annotation.WebAdapter;
 import com.mypay.membership.application.port.in.ModifyMembershipCommand;
 import com.mypay.membership.application.port.in.ModifyMembershipUseCase;
 import com.mypay.membership.domain.Membership;

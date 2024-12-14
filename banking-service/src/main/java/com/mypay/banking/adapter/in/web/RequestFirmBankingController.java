@@ -3,7 +3,7 @@ package com.mypay.banking.adapter.in.web;
 import com.mypay.banking.application.port.in.RequestFirmBankingCommand;
 import com.mypay.banking.application.port.in.RequestFirmBankingUseCase;
 import com.mypay.banking.domain.FirmBankingRequest;
-import com.mypay.common.WebAdapter;
+import com.mypay.common.annotation.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

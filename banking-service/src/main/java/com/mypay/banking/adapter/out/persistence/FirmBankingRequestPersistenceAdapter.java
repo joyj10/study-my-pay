@@ -2,7 +2,7 @@ package com.mypay.banking.adapter.out.persistence;
 
 import com.mypay.banking.application.port.out.RequestFirmBankingPort;
 import com.mypay.banking.domain.FirmBankingRequest;
-import com.mypay.common.PersistenceAdapter;
+import com.mypay.common.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;

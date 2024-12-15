@@ -1,6 +1,9 @@
 plugins {
     id 'com.palantir.docker' version '0.35.0'
 }
+ext{
+    axonVersion = "4.8.3"
+}
 
 group = 'com.mypay.money'
 version = '1.0.0'
@@ -19,6 +22,9 @@ dependencies {
 
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    implementation "org.axonframework:axon-spring-boot-starter:$axonVersion"
+    implementation "org.axonframework:axon-configuration:$axonVersion"
 }
 
 docker {

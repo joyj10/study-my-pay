@@ -1,6 +1,8 @@
 package com.mypay.money.adapter.in.web;
 
 import com.mypay.common.annotation.WebAdapter;
+import com.mypay.money.application.port.in.CreateMemberMoneyCommand;
+import com.mypay.money.application.port.in.CreateMemberMoneyUseCase;
 import com.mypay.money.application.port.in.IncreaseMoneyRequestCommand;
 import com.mypay.money.application.port.in.IncreaseMoneyRequestUseCase;
 import com.mypay.money.code.MoneyChangingResultStatus;
@@ -17,6 +19,8 @@ public class RequestMoneyChangingController {
 
     private final MoneyChangingResultDetailMapper moneyChangingResultDetailMapper;
     private final IncreaseMoneyRequestUseCase increaseMoneyRequestUseCase;
+
+    private final CreateMemberMoneyUseCase createMemberMoneyUseCase;
 
     @PostMapping("/money/increase")
     public MoneyChangingResultDetail increaseMoneyChangingRequest(@RequestBody IncreaseMoneyChangingRequest request) {
@@ -46,4 +50,21 @@ public class RequestMoneyChangingController {
         return null;
     }
 
+    @PostMapping("/money/create-member-money")
+    void createMemberMoney (@RequestBody CreateMemberMoneyRequest request) {
+        createMemberMoneyUseCase.createMemberMoney(
+                CreateMemberMoneyCommand.builder()
+                        .membershipId(request.getMembershipId())
+                        .build());
+    }
+
+    @PostMapping(path = "/money/increase-eda")
+    void increaseMoneyChangingRequestByEvent(@RequestBody IncreaseMoneyChangingRequest request) {
+        IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
+                .targetMembershipId(request.getTargetMembershipId())
+                .amount(request.getAmount())
+                .build();
+
+        increaseMoneyRequestUseCase.increaseMoneyRequestByEvent(command);
+    }
 }

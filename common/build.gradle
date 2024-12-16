@@ -1,7 +1,13 @@
+ext{
+	axonVersion = "4.8.3"
+}
+
 group = 'com.mypay'
 version = '0.0.1-SNAPSHOT'
 
 dependencies {
+	implementation "org.axonframework:axon-spring-boot-starter:$axonVersion"
+	implementation "org.axonframework:axon-configuration:$axonVersion"
 }
 
 tasks.named('test') {

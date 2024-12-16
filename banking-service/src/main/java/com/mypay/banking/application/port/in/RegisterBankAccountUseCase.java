@@ -6,4 +6,5 @@ import com.mypay.common.annotation.UseCase;
 @UseCase
 public interface RegisterBankAccountUseCase {
     RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command);
+    void registerBankAccountByEvent(RegisterBankAccountCommand command);
 }

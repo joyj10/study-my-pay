@@ -2,8 +2,12 @@ package com.mypay.money.adapter.axon.aggregate;
 
 import com.mypay.money.adapter.axon.command.IncreaseMemberMoneyCommand;
 import com.mypay.money.adapter.axon.command.MemberMoneyCreatedCommand;
+import com.mypay.money.adapter.axon.command.RechargingMoneyRequestCreateCommand;
 import com.mypay.money.adapter.axon.event.IncreaseMemberMoneyEvent;
 import com.mypay.money.adapter.axon.event.MemberMoneyCreatedEvent;
+import com.mypay.money.adapter.axon.event.RechargingRequestCreatedEvent;
+import com.mypay.money.application.port.out.GetRegisteredBankAccountPort;
+import com.mypay.money.application.port.out.RegisteredBankAccountAggregateIdentifier;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +31,16 @@ public class MemberMoneyAggregate {
 
     private int balance;
 
-    public MemberMoneyAggregate() {
-    }
-
     @CommandHandler
     public MemberMoneyAggregate(MemberMoneyCreatedCommand command) {
-        log.info("MemberMoneyCreatedCommand Handler");
+        System.out.println("MemberMoneyCreatedCommand Handler");
 
         apply(new MemberMoneyCreatedEvent(command.getMembershipId()));
     }
 
     @CommandHandler
     public String handle(@NotNull IncreaseMemberMoneyCommand command){
-        log.info("IncreaseMemberMoneyCommand Handler");
+        System.out.println("IncreaseMemberMoneyCommand Handler");
         id = command.getAggregateIdentifier();
 
         // store event
@@ -47,9 +48,31 @@ public class MemberMoneyAggregate {
         return id;
     }
 
+    @CommandHandler
+    public void handler(RechargingMoneyRequestCreateCommand command, GetRegisteredBankAccountPort getRegisteredBankAccountPort){
+        System.out.println("RechargingMoneyRequestCreateCommand Handler");
+        id = command.getAggregateIdentifier();
+
+
+        // new RechargingRequestCreatedEvent
+        // banking 정보가 필요해요. -> bank svc (get RegisteredBankAccount) 를 위한. Port.
+        RegisteredBankAccountAggregateIdentifier registeredBankAccountAggregateIdentifier
+                = getRegisteredBankAccountPort.getRegisteredBankAccount(command.getMembershipId());
+
+        // Saga Start
+        apply(new RechargingRequestCreatedEvent(
+                command.getRechargingRequestId(),
+                command.getMembershipId(),
+                command.getAmount(),
+                registeredBankAccountAggregateIdentifier.getAggregateIdentifier(),
+                registeredBankAccountAggregateIdentifier.getBankName(),
+                registeredBankAccountAggregateIdentifier.getBankAccountNumber()
+        ));
+    }
+
     @EventSourcingHandler
     public void on(MemberMoneyCreatedEvent event) {
-        log.info("MemberMoneyCreatedEvent Sourcing Handler");
+        System.out.println("MemberMoneyCreatedEvent Sourcing Handler");
         id = UUID.randomUUID().toString();
         membershipId = Long.parseLong(event.getMembershipId());
         balance = 0;
@@ -57,11 +80,12 @@ public class MemberMoneyAggregate {
 
     @EventSourcingHandler
     public void on(IncreaseMemberMoneyEvent event) {
-        log.info("IncreaseMemberMoneyEvent Sourcing Handler");
+        System.out.println("IncreaseMemberMoneyEvent Sourcing Handler");
         id = event.getAggregateIdentifier();
         membershipId = Long.parseLong(event.getTargetMembershipId());
         balance = event.getAmount();
     }
 
-
+    public MemberMoneyAggregate() {
+    }
 }
